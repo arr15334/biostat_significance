@@ -67,7 +67,7 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
   randallscore2 <- data.frame(randallscore)
   histograma <- ggplot2::ggplot(data=randallscore2, ggplot2::aes(x=randallscore)) +
     ggplot2::geom_histogram(ggplot2::aes(y = ..density..) , binwidth=5 ) +
-    ggplot2::stat_function(fun= dgumbel, args= list(loc= u, scale= s)) +
+    ggplot2::stat_function(fun= VGAM::dgumbel, args= list(loc= u, scale= s)) +
     ggplot2::geom_vline(xintercept = randallscore[1], color = "red") +
     ggplot2::labs(caption = paste("Alignment", alignment, "\nSequence1: ", seq1,
                          "\nSequence2: ", seq2, "\nType:", seq.type,
