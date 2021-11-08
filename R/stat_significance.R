@@ -35,7 +35,7 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
                                        scoreOnly = TRUE)
   n1 <- length(x)
   n2 <- length(y)
-  randallscore[2:shuffles+1] <- replicate(shuffles,
+  randallscore[2:shuffles] <- replicate(shuffles-1,
                                         calculate_shuffle(shuffle.seq,
                                                           x, y, gap.open,
                                                           gap.ext, alignment,
@@ -75,7 +75,8 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
               S=randallscore[1],
               k=k,
               sprima=s.st,
-              P=p.s
+              P=p.s,
+              scores = randallscore
               ))
 }
 
@@ -85,7 +86,7 @@ calculate_shuffle <- function(shuffle.seq, x, y, gap.open, gap.ext, alignment,
   n2 <- length(y)
   if (shuffle.seq == 1) {
     x <- seqinr::c2s(sample(x, n1, replace=FALSE))
-    if(seq.type=='DNA') {
+    if(toupper(seq.type)=='DNA') {
       x <- Biostrings::DNAString(x)
     } else if (seq.tpye =='RNA') {
       x <- Biostrings::RNAString(x)
@@ -94,14 +95,13 @@ calculate_shuffle <- function(shuffle.seq, x, y, gap.open, gap.ext, alignment,
     }
   } else {
     y <- seqinr::c2s(sample(y,n2, replace=FALSE))
-    if(seq.type=='DNA') {
-      y <- Biostrings::DNAString(x)
+    if(toupper(seq.type)=='DNA') {
+      y <- Biostrings::DNAString(y)
     } else if (seq.tpye =='RNA') {
-      y <- Biostrings::RNAString(x)
+      y <- Biostrings::RNAString(y)
     } else {
-      y <- Biostrings::AAString(x)
+      y <- Biostrings::AAString(y)
     }
-    y <- Biostrings::DNAString(y)
   }
   score <- Biostrings::pairwiseAlignment(x, y,substitutionMatrix = sub.matrix,
                                          gapOpening = -gap.open,
@@ -113,22 +113,22 @@ calculate_shuffle <- function(shuffle.seq, x, y, gap.open, gap.ext, alignment,
 
 #mat <- Biostrings::nucleotideSubstitutionMatrix(match = 1, mismatch = -3, baseOnly = TRUE)
 
-#' Statistical significance
+#' Read sequence
 #'
-#' Calculates probability of an alignment score to have been obtained randomly
+#' Reads two fasta files and converts them to biostrings object for further manipulation
 #' @param seq1 First sequence as .fasta file
 #' @param seq2 Second sequence as .fasta file
 #' @param seq.type Type of sequences (DNA/RNA/Protein)
-#' @return A list of the two sequences converted to given type
+#' @return A list of the two sequences converted to given type (DNA/RNA/AAstring)
 #' @export
 read_sequence <- function(seq1, seq2, seq.type) {
-  if (seq.type == 'RNA') {
+  if (toupper(seq.type) == 'RNA') {
     # read first fasta then convert to string object
     seq1.read <- Biostrings::readRNAStringSet(seq1)
     seq2.read <- Biostrings::readRNAStringSet(seq2)
     x <- Biostrings::RNAString(seq1.read)
     y <- Biostrings::RNAString(seq2.read)
-  } else if (seq.type == 'PROTEIN') {
+  } else if (toupper(seq.type) == 'PROTEIN') {
     seq1.read <- Biostrings::readAAStringSet(seq1)
     seq2.read <- Biostrings::readAAStringSet(seq2)
     x <- Biostrings::AAString(seq1.read)
