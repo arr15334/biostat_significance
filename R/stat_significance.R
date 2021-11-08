@@ -35,21 +35,11 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
                                        scoreOnly = TRUE)
   n1 <- length(x)
   n2 <- length(y)
-  for (i in 2:shuffles) {
-    if (shuffle.seq == 1) {
-      x <- seqinr::c2s(sample(x, n1, replace=FALSE))
-      x <- Biostrings::DNAString(x)
-    } else {
-      y <- seqinr::c2s(sample(y,n2, replace=FALSE))
-      y <- Biostrings::DNAString(y)
-    }
-    randallscore[i] <- Biostrings::pairwiseAlignment(x, y,
-                                         substitutionMatrix = sub.matrix,
-                                         gapOpening = -gap.open,
-                                         gapExtension = -gap.ext,
-                                         type=alignment,
-                                         scoreOnly = TRUE)
-  }
+  randallscore[2:shuffles+1] <- replicate(shuffles,
+                                        calculate_shuffle(shuffle.seq,
+                                                          x, y, gap.open,
+                                                          gap.ext, alignment,
+                                                          seq.type, sub.matrix))
   xmean <- mean(randallscore)
   xs <- sd(randallscore)
   lambda <- 1.2825 / xs
@@ -88,6 +78,39 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
               P=p.s
               ))
 }
+
+calculate_shuffle <- function(shuffle.seq, x, y, gap.open, gap.ext, alignment,
+                              seq.type, sub.matrix) {
+  n1 <- length(x)
+  n2 <- length(y)
+  if (shuffle.seq == 1) {
+    x <- seqinr::c2s(sample(x, n1, replace=FALSE))
+    if(seq.type=='DNA') {
+      x <- Biostrings::DNAString(x)
+    } else if (seq.tpye =='RNA') {
+      x <- Biostrings::RNAString(x)
+    } else {
+      x <- Biostrings::AAString(x)
+    }
+  } else {
+    y <- seqinr::c2s(sample(y,n2, replace=FALSE))
+    if(seq.type=='DNA') {
+      y <- Biostrings::DNAString(x)
+    } else if (seq.tpye =='RNA') {
+      y <- Biostrings::RNAString(x)
+    } else {
+      y <- Biostrings::AAString(x)
+    }
+    y <- Biostrings::DNAString(y)
+  }
+  score <- Biostrings::pairwiseAlignment(x, y,substitutionMatrix = sub.matrix,
+                                         gapOpening = -gap.open,
+                                         gapExtension = -gap.ext,
+                                         type=alignment,
+                                         scoreOnly = TRUE)
+  return(score)
+}
+
 #mat <- Biostrings::nucleotideSubstitutionMatrix(match = 1, mismatch = -3, baseOnly = TRUE)
 
 #' Statistical significance
