@@ -45,16 +45,12 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
   lambda <- 1.2825 / xs
   u <- xmean - 0.45 * xs
   k <- exp(lambda * u) / (n1*n2)
+  print(u)
   s.st <- lambda * randallscore[1] - log(k*n1*n2)
   p.s <- 1 - exp(-exp(-s.st))
   p.emp <- sum(randallscore[1] <= randallscore) / length(randallscore)
   g <- 0.57721566
-  s <- (xmean-u)/g  #no estoy segura sobre el uso de los parametros en el histograma
-  #s <- 0.78*s.st
-  #Adjusting the gumbel distribution
-  #dens <- dgumbel(randallscore, location = u, scale = s)
-  #coef <- sum(dens)/length(randallscore)
-  #dens2 <- dens/ coef
+  s <- (xmean-u)/g
   randallscore2 <- data.frame(randallscore)
   histograma <- ggplot2::ggplot(data=randallscore2, ggplot2::aes(x=randallscore)) +
     ggplot2::geom_histogram(ggplot2::aes(y = ..density..) , binwidth=5 ) +
@@ -66,11 +62,11 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
                          "\nGap extension:", gap.ext,
                          "\n# shuffles:", shuffles,
                          "\nShuffled sequence:", shuffle.seq,
-                         "\nMode:", u,
-                         "\nScale parameter:", s,
+                         "\nMode:", round(u, 4),
+                         "\nScale parameter:", round(s, 4),
                          "\nOriginal Score:", randallscore[1],
-                         "\nProbability (theoretical):", p.s,
-                         "\nProbability (empirical):", p.emp))
+                         "\nProbability (theoretical):", round(p.s, 4),
+                         "\nProbability (empirical):", round(p.emp,4)))
 
   return(list(scores.summary=summary(randallscore),
               h=histograma,
