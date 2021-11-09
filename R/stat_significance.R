@@ -47,6 +47,7 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
   k <- exp(lambda * u) / (n1*n2)
   s.st <- lambda * randallscore[1] - log(k*n1*n2)
   p.s <- 1 - exp(-exp(-s.st))
+  p.emp <- sum(randallscore[1] <= randallscore) / length(randallscore)
   g <- 0.57721566
   s <- (xmean-u)/g  #no estoy segura sobre el uso de los parametros en el histograma
   #s <- 0.78*s.st
@@ -68,7 +69,8 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
                          "\nMode:", u,
                          "\nScale parameter:", s,
                          "\nOriginal Score:", randallscore[1],
-                         "\nProbability:", p.s))
+                         "\nProbability (theoretical):", p.s,
+                         "\nProbability (empirical):", p.emp))
 
   return(list(scores.summary=summary(randallscore),
               h=histograma,
