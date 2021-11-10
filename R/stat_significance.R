@@ -85,7 +85,7 @@ calculate_shuffle <- function(shuffle.seq, x, y, gap.open, gap.ext, alignment,
     x <- seqinr::c2s(sample(x, n1, replace=FALSE))
     if(toupper(seq.type)=='DNA') {
       x <- Biostrings::DNAString(x)
-    } else if (seq.tpye =='RNA') {
+    } else if (seq.type =='RNA') {
       x <- Biostrings::RNAString(x)
     } else {
       x <- Biostrings::AAString(x)
@@ -123,13 +123,13 @@ read_sequence <- function(seq1, seq2, seq.type) {
     # read first fasta then convert to string object
     seq1.read <- Biostrings::readRNAStringSet(seq1)
     seq2.read <- Biostrings::readRNAStringSet(seq2)
-    x <- Biostrings::RNAString(seq1.read)
-    y <- Biostrings::RNAString(seq2.read)
+    x <- Biostrings::RNAString(toString(seq1.read))
+    y <- Biostrings::RNAString(toString(seq2.read))
   } else if (toupper(seq.type) == 'PROTEIN') {
     seq1.read <- Biostrings::readAAStringSet(seq1)
     seq2.read <- Biostrings::readAAStringSet(seq2)
-    x <- Biostrings::AAString(seq1.read)
-    y <- Biostrings::AAString(seq2.read)
+    x <- Biostrings::AAString(toString(seq1.read))
+    y <- Biostrings::AAString(toString(seq2.read))
   } else {
     seq1.read <- Biostrings::readDNAStringSet(seq1)
     seq2.read <- Biostrings::readDNAStringSet(seq2)
