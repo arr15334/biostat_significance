@@ -3,10 +3,12 @@ R package to calculate the statistical significance of the alignment score of tw
 
 ## Installation
 Run the following command on the RStudio console
+
 `devtools::install_github('arr15334/biostat_significance')`
 
 ## Usage
 `library(statSignificance)`
+
 `x <- stat_significance('file1.fasta', 'file2.fasta', '[DNA/RNA/Protein]'], substitutionMatrix, gapOpen, gapExtension, shuffles, shuffledSequence)`
 
 The function will return:
