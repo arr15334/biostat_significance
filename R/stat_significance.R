@@ -45,7 +45,6 @@ stat_sign <- function(seq1, seq2, seq.type, alignment, sub.matrix,
   lambda <- 1.2825 / xs
   u <- xmean - 0.45 * xs
   k <- exp(lambda * u) / (n1*n2)
-  print(u)
   s.st <- lambda * randallscore[1] - log(k*n1*n2)
   p.s <- 1 - exp(-exp(-s.st))
   p.emp <- sum(randallscore[1] <= randallscore) / length(randallscore)
