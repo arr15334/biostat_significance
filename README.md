@@ -11,7 +11,7 @@ Run the following command on the RStudio console
 
 `x <- stat_significance('file1.fasta', 'file2.fasta', '[DNA/RNA/Protein]'], substitutionMatrix, gapOpen, gapExtension, shuffles, shuffledSequence)`
 
-The function will return:
+The function will return a list containing:
 
 + an histogram pointing the original score compared with the n permutation scores -> x$h
 + A numerical summary of the scores -> x$scores.summary
